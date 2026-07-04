@@ -1,0 +1,250 @@
+{
+  "name": "Social Media Automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "aa6d93b1-4c3d-44ee-bd98-6113dd445a0a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "task": "MTYxMzUwMzEyMDA4MzQwODc0MjM6MDow",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleTasks",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "1bf6e9a7-e2de-4319-9e48-de9a04c53a4d",
+      "name": "Get many tasks",
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "qyUUlew9BRiynnwT",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a helpful assistant who helps to generate the linkedln posts for the users.\n\nYou will be given the content which will have 3 post ideas and refrence as below:\n{{ $json.content }}\n\n\n\nMake sure that you update the same on Google sheet tool provided to you which has 3 columns\nTopic\tReference \tPost\n\n\nPost should be concise with a good hook and hashtags in the bottom.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        768,
+        0
+      ],
+      "id": "3a1bd3a5-c10d-4b2a-91d1-a7ec3089dbe4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Content Ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18Z0IVonPHBTWMFiZV6H3iu05mdAu71BtI5aCdyitXrA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18Z0IVonPHBTWMFiZV6H3iu05mdAu71BtI5aCdyitXrA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Topic', ``, 'string') }}",
+            "Reference ": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Reference_', ``, 'string') }}",
+            "Post": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Post', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Reference ",
+              "displayName": "Reference ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Post",
+              "displayName": "Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1216,
+        224
+      ],
+      "id": "dd9ee331-2257-4c4a-bd90-ae6d3d2d7d91",
+      "name": "Append row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "R33HZ5zj3nKumuya",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "models/gemini-3-flash-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Hi, Can you please genearte the 3 Linkedln Post ideas, based on below resera.\n{{ $json.notes }}\n\n\nMake sure that you also provide the refrence of what exactly is needed to write the post.\n\nOutput 3 ideas like below.\n<topic1>\n<research1>\n\n<topic2>\n<research2>\n\n<topic3>\n<research3>\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "1f4f8c28-d644-49e8-82c5-44e162af17b8",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+         "id": "YOUR_GEMINI_CREDENTIAL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        768,
+        272
+      ],
+      "id": "72bcb8a5-e1b1-4cb1-8e0f-93ad88cfc27e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Dg7Bz91qDU6NTzcq",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get many tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many tasks": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "17cd8d7e-5c46-4077-9a01-9cd5862e6668",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "480babb88dd7dea40567edd117bfa476f2b918691b054f7184c2f8d3dc6f4ed1"
+  },
+  "id": "7EUXjsUeS19W8U12",
+  "tags": []
+}
