@@ -1,0 +1,75 @@
+## Software
+
+- n8n (Latest Version)
+- Node.js 18+
+- Google Account
+- Google Gemini API Key
+
+---
+
+## Required APIs
+
+Enable the following APIs in Google Cloud Console:
+
+- Google Tasks API
+- Google Sheets API
+
+---
+
+## Required Credentials
+
+Create OAuth2 credentials for:
+
+- Google Tasks
+- Google Sheets
+
+Create an API Key for:
+
+- Google Gemini API
+
+---
+
+## n8n Nodes Used
+
+- Manual Trigger
+- Google Tasks
+- Google Gemini
+- AI Agent
+- Google Sheets
+
+---
+
+## Installation
+
+1. Clone this repository.
+
+```bash
+git clone https://github.com/nishantverma0/ai-linkedin-post-generator-n8n.git
+```
+
+2. Start n8n.
+
+```bash
+npx n8n
+```
+
+or
+
+```bash
+docker compose up -d
+```
+
+3. Import the workflow.
+
+4. Configure all credentials.
+
+5. Execute the workflow.
+
+---
+
+## Tested On
+
+- n8n v1.x
+- Google Gemini API
+- Google Tasks API
+- Google Sheets API
